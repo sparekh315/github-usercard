@@ -2,7 +2,9 @@
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
+
 */
+
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +30,10 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+ 
+
+
+
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -50,11 +55,87 @@ const followersArray = [];
     </div>
 */
 
-/*
-  List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
-*/
+//card building funciton
+function UserCard(userData) {
+  const cardContainer = document.createElement('div'),
+        cardImg = document.createElement('img'),
+        cardInfoContainer =document.createElement('div'),
+        name = document.createElement('h3'),
+        userName = document.createElement('p'),
+        location = document.createElement('p'),
+        profile = document.createElement('p'),
+        profileLink = document.createElement('a'),
+        followers = document.createElement('p'),
+        following = document.createElement('p'),
+        bio = document.createElement('p');
+
+  
+  cardContainer.classList.add('card');
+  cardInfoContainer.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('username');
+
+
+  cardContainer.appendChild(cardImg);
+  cardContainer.appendChild(cardInfoContainer);
+
+  cardInfoContainer.appendChild(name);
+  cardInfoContainer.appendChild(userName);
+  cardInfoContainer.appendChild(location);
+  cardInfoContainer.appendChild(profile);
+  cardInfoContainer.appendChild(profileLink);
+  cardInfoContainer.appendChild(followers);
+  cardInfoContainer.appendChild(following);
+  cardInfoContainer.appendChild(bio);
+
+  cardImg.src = userData.avatar_url;
+  name.textContent = userData.name;
+  userName.textContent = userData.login;
+  location.textContent = userData.location;
+  profile.textContent = 'Profile Link:';
+  profileLink.href = userData.html_url;
+  profileLink.textContent = userData.html_url;
+  followers.textContent = userData.followers;
+  following.textContent = userData.following;
+  bio.textContent = userData.bio;
+
+
+
+return cardContainer
+
+}
+
+//grabbing .cards className div to hold new cards
+const cards = document.querySelector('.cards');
+console.log(cards);
+
+
+
+//personal card
+axios
+.get(`https://api.github.com/users/sparekh315`)
+.then(response => {
+  cards.prepend(UserCard(response.data));
+  console.log(response);
+})
+.catch(error => {console.log('Data not returned', error);
+});
+
+
+
+//followers cards
+const followersArray = ['tetondan', 'dustinmyers','justsml','luishrd', 'bigknell'];
+
+followersArray.forEach(user => {
+axios
+.get(`https://api.github.com/users/${user}`)
+.then(response => {
+  cards.appendChild(UserCard(response.data));
+  //console.log(response);
+})
+.catch(error => {console.log('Data not returned', error);
+});
+});
+
+
+
